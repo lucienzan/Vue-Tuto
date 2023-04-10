@@ -2,6 +2,8 @@ const app = Vue.createApp({
   data() {
     return {
       showTitle: false,
+      x: 0,
+      y: 0,
       btnTitle: "Show title",
       title: "I slam the door",
       author: "Lucien",
@@ -20,6 +22,14 @@ const app = Vue.createApp({
       } else {
         this.btnTitle = "Show title";
       }
+    },
+    handleEvent(e,data) {
+      console.log(e);
+      if (data) {
+        console.log(data);
+      }
+      this.x = e.offsetX;
+      this.y = e.offsetY;
     }
   },
 });

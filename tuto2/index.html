@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  h3 ,p {
+    margin: 0;
+  }
+  .list-wrapper {
+    width: 800px;
+    margin: 0 auto;
+    background-color: #f0ecec;
+    padding: 30px;
+  }
+  .list-wrapper li {
+    list-style-type: none;
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+  }
+  li.fav {
+    background-color: rgb(255, 200, 200);
+  }
+</style>
+<body>
+  <!-- outputting lists / attribute binding / dyanmic class-->
+  <div id="app">
+    <ul class="list-wrapper">
+      <li v-for="music in musics" :class="{fav: music.IsFav}">
+          <!--<button v-if="music.IsFav === true" class="fav-btn" @click="handleFav(music.id)">Love</button>
+          <button v-else class="fav-btn" @click="handleFav(music.id)">Add to favourite</button>-->
+          <button v-if="music.IsFav === true" class="fav-btn" @click="handleFav(music)">Love</button>
+          <button v-else class="fav-btn" @click="handleFav(music)">Add to favourite</button>
+          <img :src="music.Path" :alt="music.title">
+          <h3>{{ music.title }}</h3>
+          <p>{{ music.Author }}</p> 
+      </li>
+    </ul>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

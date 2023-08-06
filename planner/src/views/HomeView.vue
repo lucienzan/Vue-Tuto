@@ -2,23 +2,47 @@
   <div class="home">
       <div v-if="projects.length" >
           <div v-for="project in projects" :key="project.id" class="lists-sec">
-            <SingleProject :project="project"/>
+            <SingleProject :project="project" @showdialog="HandleDelete" />
           </div>
       </div>
+    <div v-else>
+      <p>There is no data available.</p>
+    </div>
+    <ConfirmModel v-if="isShow" @confirm="HandleConfirm" @cancel="HandleCancel"/>
   </div>
+ 
 </template>
 
 <script>
-// @ is an alias to /src
-
 import SingleProject from "@/components/SingleProject.vue";
+import ConfirmModel from "@/components/ConfirmModel.vue";
 
 export default {
   name: 'HomeView',
-  components: {SingleProject},
+  components: {ConfirmModel, SingleProject},
   data(){
     return{
-      projects:[]
+      projects:[],
+      isShow: false,
+      currentId:null,
+    }
+  },
+  methods:{
+    HandleConfirm(){
+      this.isShow = false
+        fetch("http://localhost:3000/projects/"+this.currentId, {method:'DELETE'})
+            .then(() => this.$emit('delete',this.currentId))
+            .catch(err => console.log(err));
+      this.projects = this.projects.filter(item=>{
+        return item.id !== this.currentId;
+      });
+    },
+    HandleDelete(id){
+      this.isShow = true;
+      this.currentId = id;
+    },
+    HandleCancel(){
+      this.isShow = false;
     }
   },
   mounted() {

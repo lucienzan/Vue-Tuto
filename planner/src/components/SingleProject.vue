@@ -9,7 +9,7 @@ check
       <span class="material-symbols-outlined">
 edit_note
 </span>
-      <span class="material-symbols-outlined">
+      <span class="material-symbols-outlined" @click="ShowDialog(project.id)">
 delete
 </span>
     </div>
@@ -23,12 +23,17 @@ delete
 <script>
 export default {
   props: ["project"],
+  emits: ["showdialog"],
   data(){
     return{
       isShow: false
     }
   },
- 
+ methods:{
+    ShowDialog(id){
+      return this.$emit("showdialog",id);
+    }
+ }
 }
 </script>
 

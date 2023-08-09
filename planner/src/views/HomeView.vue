@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-      <div v-if="projects.length" >
+    <button class="toCreate" @click="ToCreate">Create</button>
+    <div v-if="projects.length" >
           <div v-for="project in projects" :key="project.id" class="lists-sec" :class="{completed :project.complete}">
             <SingleProject :project="project" @showdialog="HandleDelete" @complete="HandleComplete"/>
           </div>
@@ -9,6 +10,7 @@
       <p>There is no data available.</p>
     </div>
     <ConfirmModel v-if="isShow" @confirm="HandleConfirm" @cancel="HandleCancel"/>
+    <FormModel v-if="isFrmShow" @cancel="HandleCancel" @note="AddNote"/>
   </div>
  
 </template>
@@ -16,14 +18,16 @@
 <script>
 import SingleProject from "@/components/SingleProject.vue";
 import ConfirmModel from "@/components/ConfirmModel.vue";
+import FormModel from "@/components/FormModel.vue";
 
 export default {
   name: 'HomeView',
-  components: {ConfirmModel, SingleProject},
+  components: {FormModel, ConfirmModel, SingleProject},
   data(){
     return{
       projects:[],
       isShow: false,
+      isFrmShow: false,
       currentId:null,
     }
   },
@@ -43,12 +47,20 @@ export default {
     },
     HandleCancel(){
       this.isShow = false;
+      this.isFrmShow = false;
     },
     HandleComplete(id){
       let project = this.projects.find(item => 
        item.id === id
       )
       project.complete = !project.complete ;
+    },
+    ToCreate(){
+      this.isFrmShow = true;
+    },
+    AddNote(note){
+      this.projects.push(note);
+      this.isFrmShow = false;
     }
   },
   mounted() {
@@ -77,5 +89,37 @@ export default {
   border-left: 6px solid #aaea9d;
   opacity: 1;
   transition: all 0.3s linear;
+}
+.toCreate {
+   background-color: #222;
+   border-radius: 4px;
+   border-style: none;
+   box-sizing: border-box;
+   color: #fff;
+   cursor: pointer;
+   display: inline-block;
+   font-family: "Farfetch Basis","Helvetica Neue",Arial,sans-serif;
+   font-size: 16px;
+   font-weight: 700;
+   line-height: 1.5;
+   max-width: none;
+   min-height: 44px;
+   min-width: 10px;
+   outline: none;
+   overflow: hidden;
+   padding: 9px 20px 8px;
+   position: relative;
+   text-align: center;
+   text-transform: none;
+   user-select: none;
+   -webkit-user-select: none;
+   touch-action: manipulation;
+   width: 150px;
+  margin-bottom: 20px;
+ }
+
+.toCreate:hover,
+.toCreate:focus {
+  opacity: .75;
 }
 </style>

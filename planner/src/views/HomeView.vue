@@ -1,8 +1,8 @@
 <template>
   <div class="home">
       <div v-if="projects.length" >
-          <div v-for="project in projects" :key="project.id" class="lists-sec">
-            <SingleProject :project="project" @showdialog="HandleDelete" />
+          <div v-for="project in projects" :key="project.id" class="lists-sec" :class="{completed :project.complete}">
+            <SingleProject :project="project" @showdialog="HandleDelete" @complete="HandleComplete"/>
           </div>
       </div>
     <div v-else>
@@ -43,6 +43,12 @@ export default {
     },
     HandleCancel(){
       this.isShow = false;
+    },
+    HandleComplete(id){
+      let project = this.projects.find(item => 
+       item.id === id
+      )
+      project.complete = !project.complete ;
     }
   },
   mounted() {
@@ -64,5 +70,12 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   border-left: 6px solid #E86A33;
   border-radius: 5px;
+  opacity: 1;
+  transition: all 0.3s linear;
+}
+.completed {
+  border-left: 6px solid #aaea9d;
+  opacity: 1;
+  transition: all 0.3s linear;
 }
 </style>

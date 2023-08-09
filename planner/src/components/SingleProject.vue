@@ -3,7 +3,7 @@
   <div class="action">
     <h3 class="article-ttl" @click="isShow = !isShow">{{ project.title }}</h3>
     <div class="controls">
-        <span class="material-symbols-outlined">
+        <span class="material-symbols-outlined" @click="IsComplete(project.id)">
 check
 </span>
       <span class="material-symbols-outlined">
@@ -23,7 +23,7 @@ delete
 <script>
 export default {
   props: ["project"],
-  emits: ["showdialog"],
+  emits: ["showdialog","complete"],
   data(){
     return{
       isShow: false
@@ -32,7 +32,18 @@ export default {
  methods:{
     ShowDialog(id){
       return this.$emit("showdialog",id);
-    }
+    },
+   IsComplete(id) {
+      fetch("http://localhost:3000/projects/"+id,
+          {
+            method: 'PATCH',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({complete: !this.project.complete})
+          }
+      )
+          .then(()=>{this.$emit('complete',id)})
+          .catch(err=>console.log(err.message));
+   }
  }
 }
 </script>

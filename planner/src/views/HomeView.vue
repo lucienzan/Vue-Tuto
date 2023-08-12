@@ -1,8 +1,12 @@
 <template>
   <div class="home">
-    <button class="toCreate" @click="ToCreate">Create</button>
+    <div class="control-sec">
+      <!-- $event is that came from emit value, set emit value to SortProject variable  -->
+      <FilterBox @sortBy="SortProject = $event" :current="SortProject"/>
+      <button class="toCreate" @click="ToCreate">Create</button>
+    </div>
     <div v-if="projects.length" >
-          <div v-for="project in projects" :key="project.id" class="lists-sec" :class="{completed :project.complete}">
+          <div v-for="project in filterProjects" :key="project.id" class="lists-sec" :class="{completed :project.complete}">
             <SingleProject :project="project" @showdialog="HandleDelete" @complete="HandleComplete"/>
           </div>
       </div>
@@ -20,60 +24,83 @@ import SingleProject from "@/components/SingleProject.vue";
 import ConfirmModel from "@/components/ConfirmModel.vue";
 import FormModel from "@/components/FormModel.vue";
 import EditProject from "@/views/EditProject.vue";
+import FilterBox from "@/components/FilterBox.vue";
 
 export default {
   name: 'HomeView',
-  components: {EditProject, FormModel, ConfirmModel, SingleProject},
-  data(){
-    return{
-      projects:[],
+  components: {FilterBox, EditProject, FormModel, ConfirmModel, SingleProject},
+  data() {
+    return {
+      projects: [],
       isShow: false,
       isFrmShow: false,
-      currentId:null,
+      currentId: null,
+      SortProject: "all"
     }
   },
-  methods:{
-    HandleConfirm(){
+  methods: {
+    HandleConfirm() {
       this.isShow = false
-        fetch("http://localhost:3000/projects/"+this.currentId, {method:'DELETE'})
-            .then(() => this.$emit('delete',this.currentId))
-            .catch(err => console.log(err));
-      this.projects = this.projects.filter(item=>{
+      fetch("http://localhost:3000/projects/" + this.currentId, {method: 'DELETE'})
+          .then(() => this.$emit('delete', this.currentId))
+          .catch(err => console.log(err));
+      this.projects = this.projects.filter(item => {
         return item.id !== this.currentId;
       });
     },
-    HandleDelete(id){
+    HandleDelete(id) {
       this.isShow = true;
       this.currentId = id;
     },
-    HandleCancel(){
+    HandleCancel() {
       this.isShow = false;
       this.isFrmShow = false;
     },
-    HandleComplete(id){
-      let project = this.projects.find(item => 
-       item.id === id
+    HandleComplete(id) {
+      let project = this.projects.find(item =>
+          item.id === id
       )
-      project.complete = !project.complete ;
+      project.complete = !project.complete;
     },
-    ToCreate(){
+    ToCreate() {
       this.isFrmShow = true;
     },
-    AddNote(note){
+    AddNote(note) {
       this.projects.push(note);
       this.isFrmShow = false;
-    }
+    },
+
   },
   mounted() {
     fetch("http://localhost:3000/projects")
-        .then(res=>res.json())
+        .then(res => res.json())
         .then(data => this.projects = data)
-        .catch(err=>console.log(err));
-  }
+        .catch(err => console.log(err));
+  },
+  computed: {
+    filterProjects() {
+      if (this.SortProject === "completed") {
+        return this.projects.filter(project => 
+           project.complete
+        )
+      }else if(this.SortProject === "unCompleted"){
+        return this.projects.filter(project =>
+            !project.complete
+        )
+      }
+      return this.projects;
+    }
 
+  }
 }
 </script>
 <style scoped>
+.control-sec {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  margin: 0 auto;
+}
 .lists-sec {
   background: #f1f1f1;
   max-width: 650px;

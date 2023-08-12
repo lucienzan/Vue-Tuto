@@ -3,13 +3,15 @@
   <div class="action">
     <h3 class="article-ttl" @click="isShow = !isShow">{{ project.title }}</h3>
     <div class="controls">
-        <span class="material-symbols-outlined">
+        <span class="material-symbols-outlined" @click="IsComplete(project.id)">
 check
 </span>
-      <span class="material-symbols-outlined">
+      <router-link :to="{ name: 'project', params:{id: project.id }}" style="color: #222222">
+        <span class="material-symbols-outlined" @click="">
 edit_note
 </span>
-      <span class="material-symbols-outlined">
+      </router-link>
+      <span class="material-symbols-outlined" @click="ShowDialog(project.id)">
 delete
 </span>
     </div>
@@ -23,12 +25,28 @@ delete
 <script>
 export default {
   props: ["project"],
+  emits: ["showdialog","complete"],
   data(){
     return{
       isShow: false
     }
   },
- 
+ methods:{
+    ShowDialog(id){
+      return this.$emit("showdialog",id);
+    },
+   IsComplete(id) {
+      fetch("http://localhost:3000/projects/"+id,
+          {
+            method: 'PATCH',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({complete: !this.project.complete})
+          }
+      )
+          .then(()=>{this.$emit('complete',id)})
+          .catch(err=>console.log(err.message));
+   }
+ }
 }
 </script>
 

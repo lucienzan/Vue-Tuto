@@ -19,10 +19,11 @@
 import SingleProject from "@/components/SingleProject.vue";
 import ConfirmModel from "@/components/ConfirmModel.vue";
 import FormModel from "@/components/FormModel.vue";
+import EditProject from "@/views/EditProject.vue";
 
 export default {
   name: 'HomeView',
-  components: {FormModel, ConfirmModel, SingleProject},
+  components: {EditProject, FormModel, ConfirmModel, SingleProject},
   data(){
     return{
       projects:[],

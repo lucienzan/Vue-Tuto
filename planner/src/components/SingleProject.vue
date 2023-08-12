@@ -6,9 +6,11 @@
         <span class="material-symbols-outlined" @click="IsComplete(project.id)">
 check
 </span>
-      <span class="material-symbols-outlined">
+      <router-link :to="{ name: 'project', params:{id: project.id }}" style="color: #222222">
+        <span class="material-symbols-outlined" @click="">
 edit_note
 </span>
+      </router-link>
       <span class="material-symbols-outlined" @click="ShowDialog(project.id)">
 delete
 </span>
